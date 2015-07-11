@@ -4,7 +4,7 @@ package com.dat.blackjacktest.model;
  * Created by DAT on 7/8/2015.
  */
 public class Card {
-    int image_id;
+    int image_index;
     int value;
     String suit;
     boolean isOpen;
@@ -12,17 +12,17 @@ public class Card {
     public Card() {
     }
 
-    public Card(int image_id, int value) {
-        this.image_id = image_id;
+    public Card(int image_index, int value) {
+        this.image_index = image_index;
         this.value = value;
     }
 
-    public int getImage_id() {
-        return image_id;
+    public int getImage_index() {
+        return image_index;
     }
 
-    public void setImage_id(int image_id) {
-        this.image_id = image_id;
+    public void setImage_index(int image_index) {
+        this.image_index = image_index;
     }
 
     public int getValue() {

@@ -6,9 +6,9 @@
     <string name="title_activity_menu">MenuActivity</string>
 
     <string-array name="suits">
-        <item>Hearts</item>
-        <item>Diamonds</item>
         <item>Clubs</item>
+        <item>Diamonds</item>
+        <item>Hearts</item>
         <item>Spades</item>
     </string-array>
 

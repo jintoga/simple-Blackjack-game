@@ -11,7 +11,9 @@ import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -53,11 +55,11 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             R.drawable.card_13a, R.drawable.card_13b, R.drawable.card_13c, R.drawable.card_13d};
     private final int[] chipImage = {R.drawable.chip_5, R.drawable.chip_25, R.drawable.chip_50};
     private final int[] chipValue = {5, 25, 50};
-    List<Card> deck = new ArrayList<Card>();
+    List<Card> deck = new ArrayList<>();
     List<Player> players = new ArrayList<>();
     List<Chip> chips = new ArrayList<>();
     Random random = new Random();
-    FrameLayout frameLayoutDeck;
+    FrameLayout frameLayoutDeck, player1Hand, player2Hand, player3Hand, player4Hand, player5Hand, player6Hand, dealerHand;
     RelativeLayout gameplayLayout;
     Button buttonMove, buttonDeal, buttonHit, buttonStand;
     ImageView imageViewDeck, imageViewCard;
@@ -65,6 +67,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     TextView namePlayer1, namePlayer2, namePlayer3, namePlayer4, namePlayer5, namePlayer6;
     View cardPlace1, cardPlace2, cardPlace3, cardPlace4, cardPlace5, cardPlace6, cardPlaceDealer;
     ImageView chipPlace1, chipPlace2, chipPlace3, chipPlace4, chipPlace5, chipPlace6;
+    ImageView player1Card1, player2Card1, player3Card1, player4Card1, player5Card1, player6Card1, dealerCard1;
     CardView cardViewDealer;
     ImageButton imageButtonBet5, imageButtonBet25, imageButtonBet50;
     List<View> listCardPlaces = new ArrayList<>();
@@ -137,8 +140,31 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         buttonHit.setVisibility(View.GONE);
         buttonStand.setVisibility(View.GONE);
 
+        player1Card1 = (ImageView) findViewById(R.id.imageViewPlayer1Card1);//these are just to make the parent(playerHand) in exact place
+        player2Card1 = (ImageView) findViewById(R.id.imageViewPlayer2Card1);
+        player3Card1 = (ImageView) findViewById(R.id.imageViewPlayer3Card1);
+        player4Card1 = (ImageView) findViewById(R.id.imageViewPlayer4Card1);
+        player5Card1 = (ImageView) findViewById(R.id.imageViewPlayer5Card1);
+        player6Card1 = (ImageView) findViewById(R.id.imageViewPlayer6Card1);
+        dealerCard1 = (ImageView) findViewById(R.id.imageViewDealerCard1);
+
+        player1Card1.setVisibility(View.INVISIBLE);//so set them all to invisible forever
+        player2Card1.setVisibility(View.INVISIBLE);
+        player3Card1.setVisibility(View.INVISIBLE);
+        player4Card1.setVisibility(View.INVISIBLE);
+        player5Card1.setVisibility(View.INVISIBLE);
+        player6Card1.setVisibility(View.INVISIBLE);
+        dealerCard1.setVisibility(View.INVISIBLE);
+
         frameLayoutDeck = (FrameLayout) findViewById(R.id.frameLayoutDeck);
         gameplayLayout = (RelativeLayout) findViewById(R.id.gameplay_layout);
+        player1Hand = (FrameLayout) findViewById(R.id.frameLayout_Player1Hand);
+        player2Hand = (FrameLayout) findViewById(R.id.frameLayout_Player2Hand);
+        player3Hand = (FrameLayout) findViewById(R.id.frameLayout_Player3Hand);
+        player4Hand = (FrameLayout) findViewById(R.id.frameLayout_Player4Hand);
+        player5Hand = (FrameLayout) findViewById(R.id.frameLayout_Player5Hand);
+        player6Hand = (FrameLayout) findViewById(R.id.frameLayout_Player6Hand);
+        dealerHand = (FrameLayout) findViewById(R.id.frameLayout_DealerHand);
         suits = getResources().getStringArray(R.array.suits);
         addCardPlacesToList();
 
@@ -165,7 +191,6 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     }
 
     public void createDeck() {
-        List<Card> decktemp = new ArrayList<>();
         int count10 = 0;
         for (int i = 1; i < 14; i++) {
             for (int j = 0; j < 4; j++) {
@@ -179,6 +204,10 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                 deck.add(card);
             }
         }
+        for (int i = 0; i < deck.size(); i++) {
+            deck.get(i).setImage_index(i);
+        }
+
         Log.e("", count10 + "");
         /*for (int i = 36; i < 52; i++) {
             decktemp.add(deck.get(i));
@@ -186,7 +215,12 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         Log.e("", count10 + "");
     }
 
+    int countMoveCard = 0;
+
     private void moveCard(View source, View destination) {
+        Log.e("Movecard count:", countMoveCard + "");
+        countMoveCard++;
+
         RelativeLayout root = (RelativeLayout) findViewById(R.id.gameplay_layout);
         DisplayMetrics metrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -205,12 +239,12 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         int getMeasuredHeight = destination.getMeasuredHeight();*/
         TranslateAnimation anim;
         if (destination == cardPlaceDealer) { //move card to dealer is different from to player since dealer's and player's views are not the same
-            anim = new TranslateAnimation(0, desPos[0] - xDest + destination.getMeasuredWidth() / 2 + 20, 0, desPos[1] - destination.getMeasuredHeight() - statusBarOffset + cardViewDealer.getMeasuredHeight() - 40);
+            anim = new TranslateAnimation(0, desPos[0] - xDest + destination.getMeasuredWidth() / 2 + 20, 0, desPos[1] - destination.getMeasuredHeight() - statusBarOffset + cardViewDealer.getMeasuredHeight() - 60);
         } else {
             anim = new TranslateAnimation(0, desPos[0] - xDest + destination.getMeasuredWidth() / 2 + 20, 0, desPos[1] - destination.getMeasuredHeight() - statusBarOffset - chipPlace1.getMeasuredHeight() - 40);
         }
 
-        anim.setDuration(500);
+        anim.setDuration(1000);
         anim.setFillAfter(true);
         source.startAnimation(anim);
     }
@@ -225,7 +259,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
 
     Runnable runnable;
 
-    int counterToStop = 0;
+    int countToStop = 0;
 
     private void giveEachPlayer2Cards() {
         /*Runnable runnable = new Runnable() {
@@ -246,14 +280,18 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             int i = 0;
             int j = 0;
 
-
             @Override
             public void run() {
-                imageViewCard.setImageResource(cardImage[i]);
-                if (counterToStop == 13) {      //last card for dealer is closed
+                /*imageViewCard.setImageResource(cardImage[deck.get(i).getImage_index()]);
+                if (countToStop == 13) {      //last card for dealer is closed
                     imageViewCard.setImageResource(R.drawable.card_backside);
-                }
+                }*/
+                imageViewCard.setImageResource(R.drawable.card_backside);
+
                 moveCard(imageViewCard, listCardPlaces.get(j));
+
+                addCardToHand(countToStop, j, deck.get(i));
+
                 i++;
                 j++;
                 if (i > cardImage.length - 1) {
@@ -262,12 +300,12 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                 if (j > listCardPlaces.size() - 1) {
                     j = 0;
                 }
-                imageViewCard.postDelayed(this, 1000);
-                counterToStop++;
-                Log.e("K:", counterToStop + "");
-                if (counterToStop == 14) {  //this is pretty dumb way to stop, just count to 6*2 = 14 cards then stop... T_T
+                imageViewCard.postDelayed(this, 1500);
+                countToStop++;
+                //Log.e("K:", counterToStop + "");
+                if (countToStop == 14) {  //this is pretty dumb way to stop, just count to 6*2 = 14 cards then stop... T_T
                     imageViewCard.removeCallbacks(runnable);
-                    counterToStop = 0;
+                    countToStop = 0;
                     buttonHit.setEnabled(true);
                     buttonStand.setEnabled(true);
                 }
@@ -278,10 +316,92 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         //handler.postDelayed(runnable, 0);
     }
 
+    private ImageView imageViewNewCard;
+    private Handler handler = new Handler(); //use to delay "addCardToHand" time
+
+    private void addCardToHand(int cardNumber, int placeNumber, Card card) {
+        imageViewNewCard = new ImageView(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(imageViewCard.getWidth(), imageViewCard.getHeight());
+        params.leftMargin = player1Card1.getWidth() / 4;
+        imageViewNewCard.setLayoutParams(params);
+        imageViewNewCard.setImageResource(cardImage[card.getImage_index()]);
+        switch (placeNumber) {
+            case 0:
+                if (player1Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                doDelayAddCard(player1Hand);
+               /* player1Hand.addView(imageViewNewCard);*/
+                break;
+            case 1:
+                if (player2Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                doDelayAddCard(player2Hand);
+                //player2Hand.addView(imageViewNewCard);
+                break;
+            case 2:
+                if (player3Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                doDelayAddCard(player3Hand);
+                //player3Hand.addView(imageViewNewCard);
+                break;
+            case 3:
+                if (player4Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                doDelayAddCard(player4Hand);
+                //player4Hand.addView(imageViewNewCard);
+                break;
+            case 4:
+                if (player5Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                doDelayAddCard(player5Hand);
+                //player5Hand.addView(imageViewNewCard);
+                break;
+            case 5:
+                if (player6Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                doDelayAddCard(player6Hand);
+                //player6Hand.addView(imageViewNewCard);
+                break;
+            case 6:
+                if (dealerHand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                    params.leftMargin = 0;
+                    imageViewNewCard.setLayoutParams(params);
+                }
+                if (cardNumber == 13) {
+                    //imageViewNewCard.setImageResource(R.drawable.card_backside);
+                    imageViewNewCard.setVisibility(View.INVISIBLE);
+                }
+                doDelayAddCard(dealerHand);
+                //dealerHand.addView(imageViewNewCard);
+                break;
+            default:
+                break;
+        }
+        Log.e("place:", placeNumber + "");
+    }
+
+    private void doDelayAddCard(final FrameLayout frameLayoutHand) {
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                frameLayoutHand.addView(imageViewNewCard);
+            }
+        }, 1500);
+    }
+
 
     private void setChips() {
-
-
         for (int i = 0; i < 3; i++) {       //create chips list with value and image
             Chip chip = new Chip();
             chip.setImageID(i);
@@ -369,7 +489,9 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, "Stand", Toast.LENGTH_SHORT).show();
         }
         if (view.getId() == R.id.buttonMove) {
-            giveEachPlayer2Cards();
+            Log.e("child:", dealerHand.toString());
+            dealerHand.getChildAt(2).setVisibility(View.VISIBLE); // set 3rd item in dealerHand (1st one is dummy) => set 2nd card in dealer hand to visible
+            imageViewCard.clearAnimation();
         }
 
     }
