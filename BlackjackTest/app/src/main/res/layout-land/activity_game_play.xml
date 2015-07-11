@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/gameplay_layout"
+    android:clipChildren="false"
+    android:background="@color/desk_color">
+
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutDealer">
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_viewDealer"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dealer"
+                    android:id="@+id/textViewDealer" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/textViewScoreDealer" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/viewCardDealer"
+            android:background="@drawable/line" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutPlayer">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutPlayer1">
+
+
+            <FrameLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/tesst"
+                    android:src="@drawable/card_10b"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/tesst2"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/tesst"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+            </FrameLayout>
+
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:id="@+id/viewCard1"
+                android:background="@drawable/line" />
+
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chip_circle_size"
+                android:layout_height="@dimen/chip_circle_size"
+                android:id="@+id/imageViewChip1"
+                android:background="@drawable/circle"></ImageView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_viewPlay1"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="4dp">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Player 1"
+                        android:id="@+id/textViewPlayer1" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/textViewScore1"
+                        android:text="Blackjack" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutPlayer2">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView"
+                    android:src="@drawable/card_10b"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/imageView"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+            </FrameLayout>
+
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:id="@+id/viewCard2"
+                android:background="@drawable/line" />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chip_circle_size"
+                android:layout_height="@dimen/chip_circle_size"
+                android:id="@+id/imageViewChip2"
+                android:background="@drawable/circle"></ImageView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_viewPlay2"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="4dp">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Player 2"
+                        android:id="@+id/textViewPlayer2" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/textViewScore2" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutPlayer3">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/card_10b"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView4"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/imageView3"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+            </FrameLayout>
+
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:id="@+id/viewCard3"
+                android:background="@drawable/line" />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chip_circle_size"
+                android:layout_height="@dimen/chip_circle_size"
+                android:id="@+id/imageViewChip3"
+                android:background="@drawable/circle"></ImageView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_viewPlay3"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="4dp">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Player 3"
+                        android:id="@+id/textViewPlayer3" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/textViewScore3" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutPlayer4">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView5"
+                    android:src="@drawable/card_10b"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView6"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/imageView5"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+            </FrameLayout>
+
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:id="@+id/viewCard4"
+                android:background="@drawable/line" />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chip_circle_size"
+                android:layout_height="@dimen/chip_circle_size"
+                android:id="@+id/imageViewChip4"
+                android:background="@drawable/circle"></ImageView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_viewPlay4"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="4dp">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Player 4"
+                        android:id="@+id/textViewPlayer4" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/textViewScore4" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutPlayer5">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView7"
+                    android:src="@drawable/card_10b"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView8"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/imageView7"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+            </FrameLayout>
+
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:id="@+id/viewCard5"
+                android:background="@drawable/line" />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chip_circle_size"
+                android:layout_height="@dimen/chip_circle_size"
+                android:id="@+id/imageViewChip5"
+                android:background="@drawable/circle"></ImageView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_viewPlay5"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="4dp">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Player 5"
+                        android:id="@+id/textViewPlayer5" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/textViewScore5" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutPlayer6">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView9"
+                    android:src="@drawable/card_10b"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageView10"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/imageView9"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />
+            </FrameLayout>
+
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:id="@+id/viewCard6"
+                android:background="@drawable/line" />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chip_circle_size"
+                android:layout_height="@dimen/chip_circle_size"
+                android:id="@+id/imageViewChip6"
+                android:background="@drawable/circle"></ImageView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_viewPlay6"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="4dp">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Player 6"
+                        android:id="@+id/textViewPlayer6" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/textViewScore6" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frameLayoutDeck">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/imageViewDeck"
+            android:src="@drawable/mystack"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageViewCard"
+            android:src="@drawable/card_backside"
+            android:layout_gravity="center_horizontal|top" />
+
+    </FrameLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/buttonMove"
+        android:layout_marginRight="26dp"
+        android:layout_marginEnd="26dp"
+        android:layout_alignTop="@+id/frameLayoutDeck"
+        android:layout_toLeftOf="@+id/frameLayoutDeck"
+        android:layout_toStartOf="@+id/frameLayoutDeck" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/frameLayoutDeck"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="@dimen/chip_size"
+            android:layout_height="@dimen/chip_size"
+            android:id="@+id/imageButtonChip5"
+            android:src="@drawable/chip_5"
+            android:scaleType="fitXY"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="@dimen/chip_size"
+            android:layout_height="@dimen/chip_size"
+            android:id="@+id/imageButtonChip25"
+            android:src="@drawable/chip_25"
+            android:scaleType="fitXY"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="@dimen/chip_size"
+            android:layout_height="@dimen/chip_size"
+            android:id="@+id/imageButtonChip50"
+            android:src="@drawable/chip_50"
+            android:scaleType="fitXY"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_style3"
+        android:id="@+id/linearLayout3">
+
+        <Button
+            android:layout_width="@dimen/commands_button_size"
+            android:layout_height="wrap_content"
+            android:text="Deal"
+            android:id="@+id/buttonDeal"
+            android:layout_alignBottom="@+id/linearLayoutDealer"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="@dimen/commands_button_size"
+            android:layout_height="wrap_content"
+            android:text="Hit"
+            android:id="@+id/buttonHit" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="@dimen/commands_button_size"
+            android:layout_height="wrap_content"
+            android:text="Stand"
+            android:id="@+id/buttonStand" />
+    </LinearLayout>
+
+</RelativeLayout>

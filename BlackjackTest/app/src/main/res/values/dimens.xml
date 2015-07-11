@@ -1,0 +1,9 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="text_size_normal">10sp</dimen>
+    <dimen name="chip_circle_size">30dp</dimen>
+    <dimen name="chip_size">40dp</dimen>
+    <dimen name="commands_button_size">70dp</dimen>
+</resources>
