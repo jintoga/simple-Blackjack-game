@@ -37,6 +37,7 @@
                     android:id="@+id/textViewDealer" />
 
                 <TextView
+                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -152,8 +153,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore1"
-                        android:text="Blackjack" />
+                        android:id="@+id/textViewScorePlayer1" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -231,7 +231,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore2" />
+                        android:id="@+id/textViewScorePlayer2" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -309,7 +309,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore3" />
+                        android:id="@+id/textViewScorePlayer3" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -390,7 +390,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore4" />
+                        android:id="@+id/textViewScorePlayer4" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -471,7 +471,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore5" />
+                        android:id="@+id/textViewScorePlayer5" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -552,7 +552,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore6" />
+                        android:id="@+id/textViewScorePlayer6" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 

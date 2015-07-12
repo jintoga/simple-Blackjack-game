@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
@@ -28,16 +27,12 @@ import com.dat.blackjacktest.model.Chip;
 import com.dat.blackjacktest.model.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class GameplayActivity extends Activity implements View.OnClickListener {
-    int[] stack;
     String[] suits;
     private final int[] cardImage = {
             R.drawable.card_1a, R.drawable.card_1b, R.drawable.card_1c, R.drawable.card_1d,
@@ -57,20 +52,24 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     private final int[] chipValue = {5, 25, 50};
     List<Card> deck = new ArrayList<>();
     List<Player> players = new ArrayList<>();
+    List<Player> playersAfterBlackjack = new ArrayList<>();
+    Player dealer = new Player("Dealer", 6); // Name: Dealer - Chair: 6
     List<Chip> chips = new ArrayList<>();
     Random random = new Random();
     FrameLayout frameLayoutDeck, player1Hand, player2Hand, player3Hand, player4Hand, player5Hand, player6Hand, dealerHand;
     RelativeLayout gameplayLayout;
     Button buttonMove, buttonDeal, buttonHit, buttonStand;
     ImageView imageViewDeck, imageViewCard;
-    TextView textViewScore1, textViewScore2, textViewScore3, textViewScore4, textViewScore5, textViewScore6;
+    TextView scorePlayer1, scorePlayer2, scorePlayer3, scorePlayer4, scorePlayer5, scorePlayer6, scoreDealer;
     TextView namePlayer1, namePlayer2, namePlayer3, namePlayer4, namePlayer5, namePlayer6;
     View cardPlace1, cardPlace2, cardPlace3, cardPlace4, cardPlace5, cardPlace6, cardPlaceDealer;
     ImageView chipPlace1, chipPlace2, chipPlace3, chipPlace4, chipPlace5, chipPlace6;
     ImageView player1Card1, player2Card1, player3Card1, player4Card1, player5Card1, player6Card1, dealerCard1;
-    CardView cardViewDealer;
+    CardView cardViewDealer, cardViewPlayer1, cardViewPlayer2, cardViewPlayer3, cardViewPlayer4, cardViewPlayer5, cardViewPlayer6;
+    List<CardView> listHighlighter = new ArrayList<>();
     ImageButton imageButtonBet5, imageButtonBet25, imageButtonBet50;
     List<View> listCardPlaces = new ArrayList<>();
+    List<View> listCardPlacesAfterCheckBlackjack = new ArrayList<>();
     int playPosition;
 
     @Override
@@ -81,8 +80,8 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         playPosition = intent.getIntExtra(MainActivity.tag_play_position, 0);
         getIDs();
         setEvents();
-
-        AlertDialog builder = new AlertDialog.Builder(this).setTitle("Start Game?").setNegativeButton("No", new DialogInterface.OnClickListener() {
+        //Toast.makeText(GameplayActivity.this, playPosition + "", Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this).setTitle("Start Game?").setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //dialogInterface.dismiss();
@@ -91,8 +90,8 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(GameplayActivity.this, "OK", Toast.LENGTH_SHORT).show();
-                setChips();
+                //Toast.makeText(GameplayActivity.this, "OK", Toast.LENGTH_SHORT).show();
+                setChipsAndBets();
                 createDeck();
             }
         }).show();
@@ -103,12 +102,13 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         buttonMove = (Button) findViewById(R.id.buttonMove);
         imageViewDeck = (ImageView) findViewById(R.id.imageViewDeck);
         imageViewCard = (ImageView) findViewById(R.id.imageViewCard);
-        textViewScore1 = (TextView) findViewById(R.id.textViewScore1);
-        textViewScore2 = (TextView) findViewById(R.id.textViewScore2);
-        textViewScore3 = (TextView) findViewById(R.id.textViewScore3);
-        textViewScore4 = (TextView) findViewById(R.id.textViewScore4);
-        textViewScore5 = (TextView) findViewById(R.id.textViewScore5);
-        textViewScore6 = (TextView) findViewById(R.id.textViewScore6);
+        scorePlayer1 = (TextView) findViewById(R.id.textViewScorePlayer1);
+        scorePlayer2 = (TextView) findViewById(R.id.textViewScorePlayer2);
+        scorePlayer3 = (TextView) findViewById(R.id.textViewScorePlayer3);
+        scorePlayer4 = (TextView) findViewById(R.id.textViewScorePlayer4);
+        scorePlayer5 = (TextView) findViewById(R.id.textViewScorePlayer5);
+        scorePlayer6 = (TextView) findViewById(R.id.textViewScorePlayer6);
+        scoreDealer = (TextView) findViewById(R.id.textViewScoreDealer);
         namePlayer1 = (TextView) findViewById(R.id.textViewPlayer1);
         namePlayer2 = (TextView) findViewById(R.id.textViewPlayer2);
         namePlayer3 = (TextView) findViewById(R.id.textViewPlayer3);
@@ -124,6 +124,14 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         cardPlaceDealer = (View) findViewById(R.id.viewCardDealer);
 
         cardViewDealer = (CardView) findViewById(R.id.card_viewDealer);
+
+        cardViewPlayer1 = (CardView) findViewById(R.id.card_viewPlay1);         //those use
+        cardViewPlayer2 = (CardView) findViewById(R.id.card_viewPlay2);         //to show
+        cardViewPlayer3 = (CardView) findViewById(R.id.card_viewPlay3);         //player's turn
+        cardViewPlayer4 = (CardView) findViewById(R.id.card_viewPlay4);         //to play
+        cardViewPlayer5 = (CardView) findViewById(R.id.card_viewPlay5);         //
+        cardViewPlayer6 = (CardView) findViewById(R.id.card_viewPlay6);
+
         chipPlace1 = (ImageView) findViewById(R.id.imageViewChip1);
         chipPlace2 = (ImageView) findViewById(R.id.imageViewChip2);
         chipPlace3 = (ImageView) findViewById(R.id.imageViewChip3);
@@ -178,6 +186,14 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         listCardPlaces.add(cardPlace5);
         listCardPlaces.add(cardPlace6);
         listCardPlaces.add(cardPlaceDealer);
+
+        listHighlighter.add(cardViewPlayer1);
+        listHighlighter.add(cardViewPlayer2);
+        listHighlighter.add(cardViewPlayer3);
+        listHighlighter.add(cardViewPlayer4);
+        listHighlighter.add(cardViewPlayer5);
+        listHighlighter.add(cardViewPlayer6);
+        listHighlighter.add(cardViewDealer);
     }
 
     private void setEvents() {
@@ -209,17 +225,13 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         }
 
         Log.e("", count10 + "");
-        /*for (int i = 36; i < 52; i++) {
-            decktemp.add(deck.get(i));
-        }*/
-        Log.e("", count10 + "");
     }
 
-    int countMoveCard = 0;
+    //int countMoveCard = 0;
 
     private void moveCard(View source, View destination) {
-        Log.e("Movecard count:", countMoveCard + "");
-        countMoveCard++;
+        //Log.e("Movecard count:", countMoveCard + "");
+        //countMoveCard++;
 
         RelativeLayout root = (RelativeLayout) findViewById(R.id.gameplay_layout);
         DisplayMetrics metrics = new DisplayMetrics();
@@ -244,70 +256,48 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             anim = new TranslateAnimation(0, desPos[0] - xDest + destination.getMeasuredWidth() / 2 + 20, 0, desPos[1] - destination.getMeasuredHeight() - statusBarOffset - chipPlace1.getMeasuredHeight() - 40);
         }
 
-        anim.setDuration(1000);
+        anim.setDuration(500);
         anim.setFillAfter(true);
         source.startAnimation(anim);
     }
 
-
-    private void testCards(int index) {
-        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), cardImage[index]);
-        imageViewCard.setImageResource(cardImage[index]);
-        moveCard(imageViewCard, cardPlace1);
-    }
-
-
-    Runnable runnable;
-
-    int countToStop = 0;
+    private Runnable runnable;
+    private int countToStopGivingEachPlayer2Cards = 0;
+    private boolean beforeCheckBlackjack = true;
 
     private void giveEachPlayer2Cards() {
-        /*Runnable runnable = new Runnable() {
-            int i = 0;
-
-            public void run() {
-                imageViewCard.setImageResource(cardImage[i]);
-                i++;
-                if (i > cardImage.length - 1) {
-                    i = 0;
-                }
-                handler.postDelayed(this, 500);  //for interval...
-            }
-        };
-        handler.postDelayed(runnable, 0); //for initial delay..*/
 
         runnable = new Runnable() {
-            int i = 0;
             int j = 0;
 
             @Override
             public void run() {
-                /*imageViewCard.setImageResource(cardImage[deck.get(i).getImage_index()]);
+                /*imageViewCard.setImageResource(cardImage[deck.get(i).getImage_index()]); //expose card before moving
                 if (countToStop == 13) {      //last card for dealer is closed
                     imageViewCard.setImageResource(R.drawable.card_backside);
                 }*/
-                imageViewCard.setImageResource(R.drawable.card_backside);
+                imageViewCard.setImageResource(R.drawable.card_backside);     //expose card after moving
 
                 moveCard(imageViewCard, listCardPlaces.get(j));
+                int selectedNumber = random.nextInt(deck.size());
+                addCardToHand(j, deck.get(selectedNumber));
+                deck.remove(selectedNumber); //remove dealt card from deck
 
-                addCardToHand(countToStop, j, deck.get(i));
-
-                i++;
                 j++;
-                if (i > cardImage.length - 1) {
-                    i = 0;
-                }
+
                 if (j > listCardPlaces.size() - 1) {
                     j = 0;
                 }
-                imageViewCard.postDelayed(this, 1500);
-                countToStop++;
-                //Log.e("K:", counterToStop + "");
-                if (countToStop == 14) {  //this is pretty dumb way to stop, just count to 6*2 = 14 cards then stop... T_T
+                imageViewCard.postDelayed(this, 1000);
+                countToStopGivingEachPlayer2Cards++;
+                if (countToStopGivingEachPlayer2Cards == 14) {  //this is pretty dumb way to stop, just count to 6*2 = 14 cards then stop... T_T
                     imageViewCard.removeCallbacks(runnable);
-                    countToStop = 0;
+                    countToStopGivingEachPlayer2Cards = 0;
                     buttonHit.setEnabled(true);
                     buttonStand.setEnabled(true);
+                    Log.e("done2cards:", deck.toString());
+                    checkBlackjackAndSetScore();
+                    beforeCheckBlackjack = false;
                 }
             }
         };
@@ -316,15 +306,265 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         //handler.postDelayed(runnable, 0);
     }
 
-    private ImageView imageViewNewCard;
+    private void checkBlackjackAndSetScore() {
+
+        for (Player player : players) {/*
+            Log.e(player.getName(), ":");
+            for (int i = 0; i < 2; i++) {
+                Log.e("card " + i, player.getCardsOnHand().get(i).getValue() + player.getCardsOnHand().get(i).getSuit());
+
+            }*/
+            if (player.getCardsOnHand().get(0).getValue() == 1 && player.getCardsOnHand().get(1).getValue() > 10) { //card 1 A , card 2 J/Q/K
+                Log.e(player.getName(), "blackjack");
+                player.setScore("Blackjack");
+            } else if (player.getCardsOnHand().get(1).getValue() == 1 && player.getCardsOnHand().get(0).getValue() > 10) { //card 2 A , card 1 J/Q/K
+                Log.e(player.getName(), "blackjack");
+                player.setScore("Blackjack");
+            } else {
+                int score = 0;
+                boolean hasAce = false;
+                hasAce = hasAce(player);
+                for (int i = 0; i < 2; i++) {
+
+                    if (player.getCardsOnHand().get(i).getValue() > 10) { //has at least 1 card A
+                        player.getCardsOnHand().get(i).setValue(10);
+                    }
+                    score += player.getCardsOnHand().get(i).getValue();
+                }
+                Log.e("Ace?", hasAce + "");
+                if (hasAce == true) {
+                    player.setTempScore1(score);
+                    player.setTempScore2(score + 10);
+                    if (player.getTempScore2() == 21) {  // A + 10 = 11 | 21 => 11
+                        player.setScore(player.getTempScore1() + "");
+                    } else {
+                        player.setScore(player.getTempScore1() + " | " + player.getTempScore2());
+                    }
+                } else {
+                    player.setScore(score + "");
+                }
+            }
+        }
+        //update score of players
+        scorePlayer1.setText(players.get(0).getScore());
+        scorePlayer2.setText(players.get(1).getScore());
+        scorePlayer3.setText(players.get(2).getScore());
+        scorePlayer4.setText(players.get(3).getScore());
+        scorePlayer5.setText(players.get(4).getScore());
+        scorePlayer6.setText(players.get(5).getScore());
+
+        //PREPARE PROCESS PLAYING AFTER CHECK BLACKJACK
+        playersAfterBlackjack = players;        // get new list of players
+        listCardPlacesAfterCheckBlackjack = listCardPlaces; // get new list of places
+       /* listCardPlacesAfterCheckBlackjack.remove(6); // this list doesn't include dealer's place*/
+        /*for (Player player : playersAfterBlackjack) {
+            player.setScore("Blackjack");
+        }*/
+        Log.e("Before:" + playersAfterBlackjack.size(), playersAfterBlackjack.toString());
+        Log.e("listCardPlaces Before:" + listCardPlacesAfterCheckBlackjack.size(), listCardPlacesAfterCheckBlackjack.toString());
+        Iterator iterator = playersAfterBlackjack.iterator();
+        Iterator iterator1 = listCardPlaces.iterator();
+        Iterator iterator2 = listHighlighter.iterator();
+        while (iterator.hasNext()) {
+            Player player = (Player) iterator.next();
+            iterator1.next();
+            iterator2.next();
+            if (/*Integer.parseInt(player.getScore()) < 5*/player.getScore().equals("Blackjack")) { // remove player who got Blackjacked and his place
+                iterator.remove();
+                iterator1.remove();
+                iterator2.remove();
+            }
+        }
+        /*Log.e("after deleted:" + playersAfterBlackjack.size(), playersAfterBlackjack.toString());
+        Log.e("listCardPlaces after deleted:" + listCardPlaces.size(), listCardPlaces.toString());*/
+        playersAfterBlackjack.add(dealer);              /* after sorted out the winning players, add dealer to the playing list.
+                                                       no need to add dealer's place to "playersAfterBlackjack" because it's already there*/
+        //Log.e("added Dealer:" + playersAfterBlackjack.size(), playersAfterBlackjack.toString());
+        // Check blackjack and score for Dealer but don't show it yet (like for Players) and wait for commands of players in next step
+        if (dealer.getCardsOnHand().get(0).getValue() == 1 && dealer.getCardsOnHand().get(1).getValue() > 10) {
+            dealer.setScore("Blackjack");
+        } else if (dealer.getCardsOnHand().get(1).getValue() == 1 && dealer.getCardsOnHand().get(0).getValue() > 10) {
+            dealer.setScore("Blackjack");
+        } else {
+            int score = 0;
+            for (int i = 0; i < 2; i++) {
+                if (dealer.getCardsOnHand().get(i).getValue() > 10) { //has J/Q/K
+                    dealer.getCardsOnHand().get(i).setValue(10);
+                }
+                score += dealer.getCardsOnHand().get(i).getValue();
+            }
+            dealer.setScore(score + "");
+        }
+
+        //playAfterCheckBlackjack();
+
+    }
+
+
+    private void playAfterCheckBlackjackNew() {
+        for (int i = 0; i < playersAfterBlackjack.size(); i++) { //this loop is pure magic T_T
+            final int finalI = i;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    giveCardByCommand(finalI);      //each move here is 1s
+                }
+            }, 6000 * i);           //give each bot 5s to think
+        }
+    }
+
+    private int countToStopGivingPlayerCard = 0;
+
+    private void giveCardByCommand(final int chair) {
+        runnable = new Runnable() {
+            int countScore = 0;
+
+            @Override
+            public void run() {
+                Player player = playersAfterBlackjack.get(chair);
+                imageViewCard.setImageResource(R.drawable.card_backside);     //expose card after moving
+
+                moveCard(imageViewCard, listCardPlaces.get(chair));
+                int selectedNumber = random.nextInt(deck.size());
+                //addCardToHand(place, deck.get(selectedNumber));
+                //player.addCardToHand(deck.get(selectedNumber));
+                deck.remove(selectedNumber); //remove dealt card from deck
+                int coundScoreTmp = 0;
+                /*for (Card card : player.getCardsOnHand()) {
+                    if ()
+                }*/
+                imageViewCard.postDelayed(this, 1000);
+                countToStopGivingPlayerCard++;
+                if (countToStopGivingPlayerCard == 5) {
+                    imageViewCard.removeCallbacks(runnable);
+                    countToStopGivingPlayerCard = 0;
+                }
+            }
+        };
+
+        runOnUiThread(runnable);
+    }
+
+    private boolean hasAce(Player player) {
+        boolean hasAce = false;
+        for (Card card : player.getCardsOnHand()) {
+            if (card.getValue() == 1)
+                hasAce = true;
+        }
+        Log.e("Has Ace:", hasAce + "");
+        return hasAce;
+    }
+
+
+    private void checkAce(Player player) {
+        int countScore = 0;
+        int countAce = 0;
+        for (Card card : player.getCardsOnHand()) {
+            if (card.getValue() == 1) {
+                // card.setTempValue(11);
+            } else {
+                countScore += card.getValue();
+            }
+        }
+    }
+
+
+    private ImageView imageViewNewCardAfterBJ;
+
+    private void addNewCardByCommand(final Player player, final Card card) {
+        imageViewNewCardAfterBJ = new ImageView(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(imageViewCard.getWidth(), imageViewCard.getHeight());
+        params.leftMargin = player1Card1.getWidth() / 2;
+        imageViewNewCardAfterBJ.setLayoutParams(params);
+        imageViewNewCardAfterBJ.setImageResource(cardImage[card.getImage_index()]);
+        switch (player.getChair()) {
+            case 0:
+                player.addCardToHand(card);
+                player1Hand.addView(imageViewNewCardAfterBJ);
+                break;
+            case 1:
+                player.addCardToHand(card);
+                Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
+                player2Hand.addView(imageViewNewCardAfterBJ);
+                break;
+            case 2:
+                player.addCardToHand(card);
+                Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
+                player3Hand.addView(imageViewNewCardAfterBJ);
+                break;
+            case 3:
+                player.addCardToHand(card);
+                Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
+                player4Hand.addView(imageViewNewCardAfterBJ);
+                break;
+            case 4:
+                player.addCardToHand(card);
+                Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
+                player5Hand.addView(imageViewNewCardAfterBJ);
+                break;
+            case 5:
+                player.addCardToHand(card);
+                Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
+                player6Hand.addView(imageViewNewCardAfterBJ);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void myTurn(Player player) {
+        //Toast.makeText(this, player.getName(), Toast.LENGTH_SHORT).show();
+        showToast(player);
+        for (Player p : playersAfterBlackjack) {
+            Log.e("Players", p.getName());
+            for (Card card : p.getCardsOnHand()) {
+                Log.e("Card" + p.getCardsOnHand().indexOf(card), card.getValue() + card.getSuit());
+            }
+        }
+        buttonHit.setEnabled(true);
+        buttonStand.setEnabled(true);
+        Log.e("myTurn", "myTurn");
+
+    }
+
+    private void showToast(Player player) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast_layout, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
+        TextView textViewName = (TextView) layout.findViewById(R.id.textViewToastPlayerName);
+        textViewName.setText(player.getName());
+        if (player.getName().equals("You")) {
+            final Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            toast.show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 500);
+        } else {
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            toast.show();
+        }
+    }
+
+    private ImageView imageViewNewCard;      //use to show animation "addCardToHand"
     private Handler handler = new Handler(); //use to delay "addCardToHand" time
 
-    private void addCardToHand(int cardNumber, int placeNumber, Card card) {
+    private void addCardToHand(int placeNumber, Card card) {
         imageViewNewCard = new ImageView(this);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(imageViewCard.getWidth(), imageViewCard.getHeight());
         params.leftMargin = player1Card1.getWidth() / 4;
         imageViewNewCard.setLayoutParams(params);
         imageViewNewCard.setImageResource(cardImage[card.getImage_index()]);
+        Log.e("DECK:", deck.toString());
         switch (placeNumber) {
             case 0:
                 if (player1Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
@@ -332,7 +572,9 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     imageViewNewCard.setLayoutParams(params);
                 }
                 doDelayAddCard(player1Hand);
+
                /* player1Hand.addView(imageViewNewCard);*/
+                players.get(0).addCardToHand(card);
                 break;
             case 1:
                 if (player2Hand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
@@ -340,6 +582,8 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     imageViewNewCard.setLayoutParams(params);
                 }
                 doDelayAddCard(player2Hand);
+
+                players.get(1).addCardToHand(card);
                 //player2Hand.addView(imageViewNewCard);
                 break;
             case 2:
@@ -348,6 +592,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     imageViewNewCard.setLayoutParams(params);
                 }
                 doDelayAddCard(player3Hand);
+                players.get(2).addCardToHand(card);
                 //player3Hand.addView(imageViewNewCard);
                 break;
             case 3:
@@ -356,6 +601,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     imageViewNewCard.setLayoutParams(params);
                 }
                 doDelayAddCard(player4Hand);
+                players.get(3).addCardToHand(card);
                 //player4Hand.addView(imageViewNewCard);
                 break;
             case 4:
@@ -364,6 +610,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     imageViewNewCard.setLayoutParams(params);
                 }
                 doDelayAddCard(player5Hand);
+                players.get(4).addCardToHand(card);
                 //player5Hand.addView(imageViewNewCard);
                 break;
             case 5:
@@ -372,6 +619,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     imageViewNewCard.setLayoutParams(params);
                 }
                 doDelayAddCard(player6Hand);
+                players.get(5).addCardToHand(card);
                 //player6Hand.addView(imageViewNewCard);
                 break;
             case 6:
@@ -379,11 +627,12 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                     params.leftMargin = 0;
                     imageViewNewCard.setLayoutParams(params);
                 }
-                if (cardNumber == 13) {
+                if (countToStopGivingEachPlayer2Cards == 13) {
                     //imageViewNewCard.setImageResource(R.drawable.card_backside);
                     imageViewNewCard.setVisibility(View.INVISIBLE);
                 }
                 doDelayAddCard(dealerHand);
+                dealer.addCardToHand(card);
                 //dealerHand.addView(imageViewNewCard);
                 break;
             default:
@@ -392,16 +641,22 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         Log.e("place:", placeNumber + "");
     }
 
-    private void doDelayAddCard(final FrameLayout frameLayoutHand) {
+    private void doDelayAddCard(FrameLayout frameLayoutHand) {
+        final FrameLayout playerHand = frameLayoutHand;
         handler.postDelayed(new Runnable() {
             public void run() {
-                frameLayoutHand.addView(imageViewNewCard);
+                if (imageViewNewCard.getParent() != null) {
+                    Log.e("Parent:", imageViewNewCard.getParent().toString());
+                    Log.e("Children", playerHand.toString());
+                    ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCard);
+                }
+                playerHand.addView(imageViewNewCard);
             }
-        }, 1500);
+        }, 1000);
     }
 
 
-    private void setChips() {
+    private void setChipsAndBets() {
         for (int i = 0; i < 3; i++) {       //create chips list with value and image
             Chip chip = new Chip();
             chip.setImageID(i);
@@ -413,14 +668,24 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             Player bot = new Player("Bot " + i);
             Chip chip = chips.get(random.nextInt(3));
             bot.setBet(chip);
+            bot.setChair(i);
             players.add(bot);
         }
         Player player = new Player("You");
+        player.setChair(playPosition);
         players.set(playPosition, player); //replace bot to player by playPosition from MainActivity
         setNamePlayerAndBots();
 
+
         doBet();
         Log.e("", "");
+    }
+
+    private void playerBet(Chip chip) {
+        Player player = players.get(playPosition);
+        player.setBet(chip);
+        players.set(playPosition, player);
+        doBet();
     }
 
     private void doBet() {
@@ -438,12 +703,6 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             chipPlace6.setImageResource(chipImage[players.get(5).getBet().getImageID()]);
     }
 
-    private void playerBet(Chip chip) {
-        Player player = players.get(playPosition);
-        player.setBet(chip);
-        players.set(playPosition, player);
-        doBet();
-    }
 
     private void setNamePlayerAndBots() {
         namePlayer1.setText(players.get(0).getName());
@@ -484,14 +743,20 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         }
         if (view.getId() == R.id.buttonHit) {
             Toast.makeText(this, "Hit", Toast.LENGTH_SHORT).show();
+            //giveCardByCommand(0);
+            playAfterCheckBlackjackNew();
         }
         if (view.getId() == R.id.buttonStand) {
             Toast.makeText(this, "Stand", Toast.LENGTH_SHORT).show();
         }
         if (view.getId() == R.id.buttonMove) {
+            handler.removeCallbacksAndMessages(null);
             Log.e("child:", dealerHand.toString());
-            dealerHand.getChildAt(2).setVisibility(View.VISIBLE); // set 3rd item in dealerHand (1st one is dummy) => set 2nd card in dealer hand to visible
-            imageViewCard.clearAnimation();
+            if (dealerHand.getChildAt(2) != null)
+                dealerHand.getChildAt(2).setVisibility(View.VISIBLE); // set 3rd item in dealerHand (1st one is dummy) => set 2nd card in dealer hand to visible
+            imageViewCard.clearAnimation();     // covered card actually is just fillAfter of animation => clear it to show card
+            if (dealer.getScore() != null)
+                scoreDealer.setText(dealer.getScore());
         }
 
     }

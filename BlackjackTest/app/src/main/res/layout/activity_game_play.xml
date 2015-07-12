@@ -4,15 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/gameplay_layout"
+    android:clipChildren="false"
     android:background="@color/desk_color">
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayoutDealer">
+
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_viewDealer"
@@ -47,14 +48,35 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="15dp"
             android:id="@+id/viewCardDealer"
             android:background="@drawable/line" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout_DealerHand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageViewDealerCard1"
+                android:src="@drawable/card_10b" />
+
+            <!-- <ImageView
+                 android:layout_width="40dp"
+                 android:layout_height="50dp"
+                 android:id="@+id/imageViewPlayer1Card2"
+                 android:src="@drawable/card_10a"
+                 android:layout_marginLeft="10dp" />-->
+        </FrameLayout>
 
     </LinearLayout>
 
 
     <LinearLayout
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
@@ -68,6 +90,25 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer1">
 
+
+            <FrameLayout
+                android:id="@+id/frameLayout_Player1Hand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer1Card1"
+                    android:src="@drawable/card_10b" />
+
+                <!-- <ImageView
+                     android:layout_width="40dp"
+                     android:layout_height="50dp"
+                     android:id="@+id/imageViewPlayer1Card2"
+                     android:src="@drawable/card_10a"
+                     android:layout_marginLeft="10dp" />-->
+            </FrameLayout>
 
             <View
                 android:layout_marginRight="15dp"
@@ -111,7 +152,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore1" />
+                        android:id="@+id/textViewScorePlayer1"
+                        android:text="Blackjack" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -125,6 +167,28 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer2">
 
+
+            <FrameLayout
+
+                android:id="@+id/frameLayout_Player2Hand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer2Card1"
+                    android:src="@drawable/card_10b" />
+
+                <!-- <ImageView
+                     android:layout_width="40dp"
+                     android:layout_height="50dp"
+                     android:id="@+id/imageViewPlayer2Card2"
+                     android:src="@drawable/card_10a"
+                     android:layout_gravity="center_horizontal|top"
+                     android:layout_marginLeft="10dp"
+                     android:layout_marginStart="10dp" />-->
+            </FrameLayout>
 
             <View
                 android:layout_marginRight="15dp"
@@ -167,7 +231,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore2" />
+                        android:id="@+id/textViewScorePlayer2" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -181,6 +245,28 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer3">
 
+
+            <FrameLayout
+
+                android:id="@+id/frameLayout_Player3Hand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer3Card1"
+                    android:src="@drawable/card_10b" />
+
+                <!--<ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer3Card2"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp" />-->
+            </FrameLayout>
 
             <View
                 android:layout_marginRight="15dp"
@@ -223,7 +309,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore3" />
+                        android:id="@+id/textViewScorePlayer3" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -237,6 +323,31 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer4">
 
+
+            <FrameLayout
+
+                android:id="@+id/frameLayout_Player4Hand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer4Card1"
+                    android:src="@drawable/card_10b" />
+
+                <!-- <ImageView
+                     android:layout_width="40dp"
+                     android:layout_height="50dp"
+                     android:id="@+id/imageViewPlayer4Card2"
+                     android:src="@drawable/card_10a"
+                     android:layout_gravity="center_horizontal|top"
+                     android:layout_marginLeft="10dp"
+                     android:layout_marginStart="10dp"
+                     android:layout_alignTop="@+id/imageView5"
+                     android:layout_alignLeft="@+id/linearLayoutPlayer"
+                     android:layout_alignStart="@+id/linearLayoutPlayer" />-->
+            </FrameLayout>
 
             <View
                 android:layout_marginRight="15dp"
@@ -279,7 +390,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore4" />
+                        android:id="@+id/textViewScorePlayer4" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -293,6 +404,31 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer5">
 
+
+            <FrameLayout
+
+                android:id="@+id/frameLayout_Player5Hand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer5Card1"
+                    android:src="@drawable/card_10b" />
+
+                <!--<ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer5Card2"
+                    android:src="@drawable/card_10a"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignTop="@+id/imageView7"
+                    android:layout_alignLeft="@+id/linearLayoutPlayer"
+                    android:layout_alignStart="@+id/linearLayoutPlayer" />-->
+            </FrameLayout>
 
             <View
                 android:layout_marginRight="15dp"
@@ -335,7 +471,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore5" />
+                        android:id="@+id/textViewScorePlayer5" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -349,6 +485,31 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer6">
 
+
+            <FrameLayout
+
+                android:id="@+id/frameLayout_Player6Hand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageViewPlayer6Card1"
+                    android:src="@drawable/card_10b" />
+
+                <!-- <ImageView
+                     android:layout_width="40dp"
+                     android:layout_height="50dp"
+                     android:id="@+id/imageViewPlayer6Card2"
+                     android:src="@drawable/card_10a"
+                     android:layout_gravity="center_horizontal|top"
+                     android:layout_marginLeft="10dp"
+                     android:layout_marginStart="10dp"
+                     android:layout_alignTop="@+id/imageView9"
+                     android:layout_alignLeft="@+id/linearLayoutPlayer"
+                     android:layout_alignStart="@+id/linearLayoutPlayer" />-->
+            </FrameLayout>
 
             <View
                 android:layout_marginRight="15dp"
@@ -391,7 +552,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/textViewScore6" />
+                        android:id="@+id/textViewScorePlayer6" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -399,32 +560,50 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:id="@+id/imageViewDeck"
-        android:src="@drawable/mystack"
-        android:layout_marginTop="66dp"
-        android:layout_below="@+id/linearLayout2"
+
+    <FrameLayout
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frameLayoutDeck">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/imageViewDeck"
+            android:src="@drawable/mystack"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageViewCard"
+            android:src="@drawable/card_backside"
+            android:layout_gravity="center_horizontal|top" />
+
+    </FrameLayout>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Button"
         android:id="@+id/buttonMove"
-        android:layout_alignBottom="@+id/linearLayoutDealer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginRight="26dp"
+        android:layout_marginEnd="26dp"
+        android:layout_alignTop="@+id/frameLayoutDeck"
+        android:layout_toLeftOf="@+id/frameLayoutDeck"
+        android:layout_toStartOf="@+id/frameLayoutDeck" />
 
     <LinearLayout
-        android:layout_marginLeft="10dp"
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/linearLayout"
-        android:layout_alignTop="@+id/imageViewDeck"
+        android:layout_below="@+id/frameLayoutDeck"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
@@ -460,11 +639,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/border_style3"
-        android:id="@+id/linearLayout2"
-        android:layout_below="@+id/linearLayoutDealer"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="43dp">
+        android:id="@+id/linearLayout3">
 
         <Button
             android:layout_width="@dimen/commands_button_size"

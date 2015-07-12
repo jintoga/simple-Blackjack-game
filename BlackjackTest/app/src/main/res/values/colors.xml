@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="desk_color">#ff028328</color>
+    <color name="highlight">#fff7f350</color>
 </resources>

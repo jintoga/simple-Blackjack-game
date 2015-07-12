@@ -48,4 +48,6 @@ public class Card {
     public void setOpen(boolean isOpen) {
         this.isOpen = isOpen;
     }
+
+
 }
