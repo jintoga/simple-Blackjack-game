@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +73,10 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     List<View> listCardPlacesAfterCheckBlackjack = new ArrayList<>();
     int playPosition;
 
+    ProgressBar progressBarWaitBots;
+    TextView textViewWaiting;
+    ImageView imageViewWaiting;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +104,13 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     }
 
     private void getIDs() {
+        progressBarWaitBots = (ProgressBar) findViewById(R.id.progressBarWaiting);
+        textViewWaiting = (TextView) findViewById(R.id.textViewWaiting);
+        imageViewWaiting = (ImageView) findViewById(R.id.imageViewWaiting);
+        progressBarWaitBots.setVisibility(View.INVISIBLE);
+        textViewWaiting.setVisibility(View.INVISIBLE);
+        imageViewWaiting.setVisibility(View.INVISIBLE);
+
         buttonMove = (Button) findViewById(R.id.buttonMove);
         imageViewDeck = (ImageView) findViewById(R.id.imageViewDeck);
         imageViewCard = (ImageView) findViewById(R.id.imageViewCard);
@@ -323,25 +335,28 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             } else {
                 int score = 0;
                 boolean hasAce = false;
-                hasAce = hasAce(player);
+                hasAce = checkHasAce(player);
                 for (int i = 0; i < 2; i++) {
 
-                    if (player.getCardsOnHand().get(i).getValue() > 10) { //has at least 1 card A
+                    if (player.getCardsOnHand().get(i).getValue() > 10) { //has J/Q/K
                         player.getCardsOnHand().get(i).setValue(10);
                     }
                     score += player.getCardsOnHand().get(i).getValue();
                 }
                 Log.e("Ace?", hasAce + "");
                 if (hasAce == true) {
+                    player.setHasAce(true);
                     player.setTempScore1(score);
                     player.setTempScore2(score + 10);
                     if (player.getTempScore2() == 21) {  // A + 10 = 11 | 21 => 11
-                        player.setScore(player.getTempScore1() + "");
+                        player.setScore(player.getTempScore1() + "");                               // no finalScore yet
                     } else {
-                        player.setScore(player.getTempScore1() + " | " + player.getTempScore2());
+                        player.setScore(player.getTempScore1() + " | " + player.getTempScore2());   // no finalScore yet
                     }
                 } else {
                     player.setScore(score + "");
+                    player.setFinalScore(score);
+                    player.setTempScore1(score);
                 }
             }
         }
@@ -377,8 +392,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         }
         /*Log.e("after deleted:" + playersAfterBlackjack.size(), playersAfterBlackjack.toString());
         Log.e("listCardPlaces after deleted:" + listCardPlaces.size(), listCardPlaces.toString());*/
-        playersAfterBlackjack.add(dealer);              /* after sorted out the winning players, add dealer to the playing list.
-                                                       no need to add dealer's place to "playersAfterBlackjack" because it's already there*/
+
         //Log.e("added Dealer:" + playersAfterBlackjack.size(), playersAfterBlackjack.toString());
         // Check blackjack and score for Dealer but don't show it yet (like for Players) and wait for commands of players in next step
         if (dealer.getCardsOnHand().get(0).getValue() == 1 && dealer.getCardsOnHand().get(1).getValue() > 10) {
@@ -387,14 +401,34 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             dealer.setScore("Blackjack");
         } else {
             int score = 0;
+            boolean hasAce = false;
+            hasAce = checkHasAce(dealer);
             for (int i = 0; i < 2; i++) {
                 if (dealer.getCardsOnHand().get(i).getValue() > 10) { //has J/Q/K
                     dealer.getCardsOnHand().get(i).setValue(10);
                 }
                 score += dealer.getCardsOnHand().get(i).getValue();
             }
-            dealer.setScore(score + "");
+            Log.e("Dealer Ace?", hasAce + "");
+            if (hasAce == true) {
+                dealer.setHasAce(true);
+                dealer.setTempScore1(score);
+                dealer.setTempScore2(score + 10);
+                if (dealer.getTempScore2() == 21) {  // A + 10 = 11 | 21 => 11
+                    dealer.setScore(dealer.getTempScore1() + "");                               // no finalScore yet
+                } else {
+                    dealer.setScore(dealer.getTempScore1() + " | " + dealer.getTempScore2());   // no finalScore yet
+                }
+            } else {
+                dealer.setScore(score + "");
+                dealer.setFinalScore(score);
+                dealer.setTempScore1(score);
+            }
         }
+        if (!dealer.getScore().equals("Blackjack"))
+            playersAfterBlackjack.add(dealer);              /* after sorted out the winning players, add dealer to the playing list.
+                                                       no need to add dealer's place to "playersAfterBlackjack" because it's already there*/
+
 
         //playAfterCheckBlackjack();
 
@@ -402,42 +436,114 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
 
 
     private void playAfterCheckBlackjackNew() {
+        playersAfterBlackjack.get(0).setTempScore1(-10);
+        playersAfterBlackjack.get(0).setFinalScore(-10);
+        playersAfterBlackjack.get(0).setTempScore2(-10);
+        playersAfterBlackjack.get(0).setScore(1 + "");
         for (int i = 0; i < playersAfterBlackjack.size(); i++) { //this loop is pure magic T_T
             final int finalI = i;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    //progressBarWaitBots.setVisibility(View.VISIBLE);
+                    textViewWaiting.setText(playersAfterBlackjack.get(finalI).getName());
+                    //textViewWaiting.setVisibility(View.VISIBLE);
+                    //imageViewWaiting.setVisibility(View.VISIBLE);
                     giveCardByCommand(finalI);      //each move here is 1s
                 }
-            }, 6000 * i);           //give each bot 5s to think
+            }, 5000 * i);           //give each bot 5s to think
+
         }
     }
 
-    private int countToStopGivingPlayerCard = 0;
+    private String gameHistory = "";
 
     private void giveCardByCommand(final int chair) {
+
         runnable = new Runnable() {
-            int countScore = 0;
 
             @Override
             public void run() {
                 Player player = playersAfterBlackjack.get(chair);
-                imageViewCard.setImageResource(R.drawable.card_backside);     //expose card after moving
-
-                moveCard(imageViewCard, listCardPlaces.get(chair));
-                int selectedNumber = random.nextInt(deck.size());
-                //addCardToHand(place, deck.get(selectedNumber));
-                //player.addCardToHand(deck.get(selectedNumber));
-                deck.remove(selectedNumber); //remove dealt card from deck
-                int coundScoreTmp = 0;
-                /*for (Card card : player.getCardsOnHand()) {
-                    if ()
+                /*if (player.getName().equals("Dealer")) {
+                    Log.e("DEALER", "DEALER " + player.getFinalScore());
                 }*/
-                imageViewCard.postDelayed(this, 1000);
-                countToStopGivingPlayerCard++;
-                if (countToStopGivingPlayerCard == 5) {
+                if (player.getTempScore1() < 10) {          //first check if score <10 then take more card
+
+                    do {
+                        imageViewCard.setImageResource(R.drawable.card_backside);     //expose card after moving
+                        moveCard(imageViewCard, listCardPlaces.get(chair));
+                        int selectedNumber = random.nextInt(deck.size());
+                        //addCardToHand(place, deck.get(selectedNumber));
+                        player.addCardToHand(deck.get(selectedNumber));
+                        gameHistory += player.getName() + " current score:" + player.getFinalScore() + " take card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit() + "\n";
+                        Log.e("Took Card", player.getName() + " with score " + player.getFinalScore() + " took card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit());
+                        Log.e("score", player.getName() + " : Score= " + player.getFinalScore());
+                        checkFinalScore(player, deck.get(selectedNumber));
+                        deck.remove(selectedNumber); //remove dealt card from deck
+                        updateScore(player);
+                        progressBarWaitBots.setVisibility(View.VISIBLE);
+                        textViewWaiting.setVisibility(View.VISIBLE);
+                        imageViewWaiting.setVisibility(View.VISIBLE);
+                        imageViewCard.postDelayed(this, 5000);
+                        if (player.getFinalScore() > 30)
+                            imageViewCard.removeCallbacks(runnable);
+
+                    } while (player.getFinalScore() < 10);
+                    //imageViewCard.removeCallbacks(runnable);
+                } else if (player.getFinalScore() >= 10 && player.getFinalScore() <= 16) {          //then check if score >16 stop taking card
+                    do {
+                        Log.e("50-50", "50-50");
+                        progressBarWaitBots.setVisibility(View.VISIBLE);
+                        textViewWaiting.setVisibility(View.VISIBLE);
+                        imageViewWaiting.setVisibility(View.VISIBLE);
+                        int chanceToTakeMoreCard = random.nextInt(2);
+                        int selectedNumber = random.nextInt(deck.size());
+                        if (chanceToTakeMoreCard == 0) {
+                            Log.e("Bad luck", player.getName() + " BadLUCK");
+                            gameHistory += player.getName() + " thinks he is out of luck so he STAND with score:" + player.getFinalScore() + "\n";
+                        } else {
+                            Log.e("Chance Take more", chanceToTakeMoreCard + "");
+                            moveCard(imageViewCard, listCardPlaces.get(chair));
+
+                            player.addCardToHand(deck.get(selectedNumber));
+                            Log.e("Took Card", player.getName() + " with score " + player.getFinalScore() + " took card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit());
+                            gameHistory += player.getName() + " current score:" + player.getFinalScore() + " take card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit() + "\n";
+                            checkFinalScore(player, deck.get(selectedNumber));
+                            deck.remove(selectedNumber); //remove dealt card from deck
+                        }
+                        updateScore(player);
+                        imageViewCard.postDelayed(this, 5000);
+                        if (player.getFinalScore() > 30) {
+                            imageViewCard.removeCallbacks(runnable);
+                        }
+                    } while (player.getFinalScore() >= 10 && player.getFinalScore() <= 16);
+
+
+                } else if (player.getFinalScore() > 16) {          //then check if score >16 stop taking card
+                    Log.e("STAND", player.getName() + " STAND WITH " + ": Score= " + player.getFinalScore());
+                    gameHistory += player.getName() + " thinks he is out of luck so he STAND with score:" + player.getFinalScore() + "\n";
+                    progressBarWaitBots.setVisibility(View.VISIBLE);
+                    textViewWaiting.setVisibility(View.VISIBLE);
+                    imageViewWaiting.setVisibility(View.VISIBLE);
+                    updateScore(player);
+                    imageViewCard.postDelayed(this, 5000);
                     imageViewCard.removeCallbacks(runnable);
-                    countToStopGivingPlayerCard = 0;
+
+                }
+                //Log.e("  chair:", chair + "  Players size:" + playersAfterBlackjack.size());
+                if (chair == playersAfterBlackjack.size() - 1) {
+                    progressBarWaitBots.setVisibility(View.INVISIBLE);
+                    textViewWaiting.setVisibility(View.INVISIBLE);
+                    imageViewWaiting.setVisibility(View.INVISIBLE);
+                    imageViewCard.removeCallbacks(runnable);
+                    Log.e("History: ", gameHistory);
+                }
+                if (player.getName().equals("Dealer") && player.getScore().equals("Blackjack")) {
+                    progressBarWaitBots.setVisibility(View.INVISIBLE);
+                    textViewWaiting.setVisibility(View.INVISIBLE);
+                    imageViewWaiting.setVisibility(View.INVISIBLE);
+                    imageViewCard.removeCallbacks(runnable);
                 }
             }
         };
@@ -445,7 +551,94 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         runOnUiThread(runnable);
     }
 
-    private boolean hasAce(Player player) {
+    private void updateScore(Player player) {
+        switch (player.getChair()) {
+            case 0:
+                if (player.getFinalScore() > 21)
+                    scorePlayer1.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scorePlayer1.setText("Blackjack");
+                else
+                    scorePlayer1.setText(player.getFinalScore() + "");
+                break;
+            case 1:
+                if (player.getFinalScore() > 21)
+                    scorePlayer2.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scorePlayer2.setText("Blackjack");
+                else
+                    scorePlayer2.setText(player.getFinalScore() + "");
+                break;
+            case 2:
+                if (player.getFinalScore() > 21)
+                    scorePlayer3.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scorePlayer3.setText("Blackjack");
+                else
+                    scorePlayer3.setText(player.getFinalScore() + "");
+                break;
+            case 3:
+                if (player.getFinalScore() > 21)
+                    scorePlayer4.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scorePlayer4.setText("Blackjack");
+                else
+                    scorePlayer4.setText(player.getFinalScore() + "");
+                break;
+            case 4:
+                if (player.getFinalScore() > 21)
+                    scorePlayer5.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scorePlayer5.setText("Blackjack");
+                else
+                    scorePlayer5.setText(player.getFinalScore() + "");
+                break;
+            case 5:
+                if (player.getFinalScore() > 21)
+                    scorePlayer6.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scorePlayer6.setText("Blackjack");
+                else
+                    scorePlayer6.setText(player.getFinalScore() + "");
+                break;
+            case 6:
+                if (player.getFinalScore() > 21)
+                    scoreDealer.setText(player.getFinalScore() + " (BUST)");
+                else if (player.getFinalScore() == 21)
+                    scoreDealer.setText("Blackjack");
+                else
+                    scoreDealer.setText(player.getFinalScore() + "");
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    private void checkFinalScore(Player player, Card card) {
+
+        if (player.isHasAce()) {
+            if (card.getValue() > 10) {         //J/Q/K => 10
+                card.setValue(10);
+            }
+            int score1 = card.getValue() + player.getTempScore1();
+            int score2 = card.getValue() + player.getTempScore2();
+            if (score2 > 21) {
+                player.setFinalScore(score1);
+            } else {
+                player.setFinalScore(score2);
+            }
+        } else {
+            if (card.getValue() > 10) {         //J/Q/K => 10
+                card.setValue(10);
+            }
+            int score = player.getFinalScore();
+            score += card.getValue();
+            player.setFinalScore(score);
+        }
+    }
+
+    private boolean checkHasAce(Player player) {
         boolean hasAce = false;
         for (Card card : player.getCardsOnHand()) {
             if (card.getValue() == 1)
@@ -453,19 +646,6 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         }
         Log.e("Has Ace:", hasAce + "");
         return hasAce;
-    }
-
-
-    private void checkAce(Player player) {
-        int countScore = 0;
-        int countAce = 0;
-        for (Card card : player.getCardsOnHand()) {
-            if (card.getValue() == 1) {
-                // card.setTempValue(11);
-            } else {
-                countScore += card.getValue();
-            }
-        }
     }
 
 
@@ -527,6 +707,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         Log.e("myTurn", "myTurn");
 
     }
+
 
     private void showToast(Player player) {
         LayoutInflater inflater = getLayoutInflater();

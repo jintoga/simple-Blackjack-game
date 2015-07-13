@@ -12,13 +12,16 @@ public class Player {
     int money;
     Chip bet;
     List<Card> cardsOnHand = new ArrayList<>();
-    String score; //score is String to store not only number but "blackjack"
-    int countingValue;
+    String score; //score is String to store not only number but also "blackjack" and "tempScore1 | tempScore2"
+    String status;
     int chair;
 
-    int tempScore1;
-    int tempScore2;
+    int tempScore;
+    int tempScore1; //always <10
+    int tempScore2; //always >11
     int finalScore;
+
+    boolean hasAce = false;
 
     public Player() {
     }
@@ -102,5 +105,29 @@ public class Player {
 
     public void setFinalScore(int finalScore) {
         this.finalScore = finalScore;
+    }
+
+    public boolean isHasAce() {
+        return hasAce;
+    }
+
+    public void setHasAce(boolean hasAce) {
+        this.hasAce = hasAce;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getTempScore() {
+        return tempScore;
+    }
+
+    public void setTempScore(int tempScore) {
+        this.tempScore = tempScore;
     }
 }
