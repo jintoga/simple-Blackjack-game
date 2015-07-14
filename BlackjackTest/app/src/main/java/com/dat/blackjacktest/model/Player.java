@@ -130,4 +130,17 @@ public class Player {
     public void setTempScore(int tempScore) {
         this.tempScore = tempScore;
     }
+
+    public int getCurrentScore() {
+        int currentScore = 0;
+        int cardValue;
+        for (Card card : cardsOnHand) {
+            if (card.getValue() > 10)
+                cardValue = 10;
+            else
+                cardValue = card.getValue();
+            currentScore += cardValue;
+        }
+        return currentScore;
+    }
 }

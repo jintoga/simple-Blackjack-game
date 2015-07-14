@@ -36,12 +36,25 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/imageViewWaiting"
-            android:src="@drawable/thinking"
-            android:layout_gravity="center" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageViewWaiting"
+                android:src="@drawable/thinking"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textViewCommand" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -103,12 +116,12 @@
                 android:id="@+id/imageViewDealerCard1"
                 android:src="@drawable/card_10b" />
 
-            <!-- <ImageView
-                 android:layout_width="40dp"
-                 android:layout_height="50dp"
-                 android:id="@+id/imageViewPlayer1Card2"
-                 android:src="@drawable/card_10a"
-                 android:layout_marginLeft="10dp" />-->
+            <!--<ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageViewDealerCard2"
+                android:src="@drawable/card_backside"
+                android:layout_marginLeft="10dp" />-->
         </FrameLayout>
 
     </LinearLayout>
@@ -620,6 +633,13 @@
             android:layout_width="40dp"
             android:layout_height="50dp"
             android:id="@+id/imageViewCard"
+            android:src="@drawable/card_backside"
+            android:layout_gravity="center_horizontal|top" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageViewCardAfterBJ"
             android:src="@drawable/card_backside"
             android:layout_gravity="center_horizontal|top" />
 

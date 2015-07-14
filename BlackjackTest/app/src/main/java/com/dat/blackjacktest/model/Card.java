@@ -50,4 +50,10 @@ public class Card {
     }
 
 
+    public int jqkTo10() {
+        if (value > 10)
+            return 10;
+        else
+            return value;
+    }
 }

@@ -60,7 +60,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     FrameLayout frameLayoutDeck, player1Hand, player2Hand, player3Hand, player4Hand, player5Hand, player6Hand, dealerHand;
     RelativeLayout gameplayLayout;
     Button buttonMove, buttonDeal, buttonHit, buttonStand;
-    ImageView imageViewDeck, imageViewCard;
+    ImageView imageViewDeck, imageViewCard, imageViewCardDealingAfterBJ;
     TextView scorePlayer1, scorePlayer2, scorePlayer3, scorePlayer4, scorePlayer5, scorePlayer6, scoreDealer;
     TextView namePlayer1, namePlayer2, namePlayer3, namePlayer4, namePlayer5, namePlayer6;
     View cardPlace1, cardPlace2, cardPlace3, cardPlace4, cardPlace5, cardPlace6, cardPlaceDealer;
@@ -72,10 +72,12 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     List<View> listCardPlaces = new ArrayList<>();
     List<View> listCardPlacesAfterCheckBlackjack = new ArrayList<>();
     int playPosition;
-
+    private final int[] imageSad = {R.drawable.sad, R.drawable.rage1};
     ProgressBar progressBarWaitBots;
-    TextView textViewWaiting;
+    TextView textViewWaiting, textViewCommand;
     ImageView imageViewWaiting;
+
+    boolean afterBlackjack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,14 +108,20 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     private void getIDs() {
         progressBarWaitBots = (ProgressBar) findViewById(R.id.progressBarWaiting);
         textViewWaiting = (TextView) findViewById(R.id.textViewWaiting);
+        textViewCommand = (TextView) findViewById(R.id.textViewCommand);
         imageViewWaiting = (ImageView) findViewById(R.id.imageViewWaiting);
         progressBarWaitBots.setVisibility(View.INVISIBLE);
         textViewWaiting.setVisibility(View.INVISIBLE);
+        textViewCommand.setVisibility(View.INVISIBLE);
         imageViewWaiting.setVisibility(View.INVISIBLE);
+
 
         buttonMove = (Button) findViewById(R.id.buttonMove);
         imageViewDeck = (ImageView) findViewById(R.id.imageViewDeck);
         imageViewCard = (ImageView) findViewById(R.id.imageViewCard);
+        imageViewCardDealingAfterBJ = (ImageView) findViewById(R.id.imageViewCardAfterBJ);
+        imageViewCardDealingAfterBJ.setVisibility(View.INVISIBLE);
+
         scorePlayer1 = (TextView) findViewById(R.id.textViewScorePlayer1);
         scorePlayer2 = (TextView) findViewById(R.id.textViewScorePlayer2);
         scorePlayer3 = (TextView) findViewById(R.id.textViewScorePlayer3);
@@ -175,6 +183,9 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         player5Card1.setVisibility(View.INVISIBLE);
         player6Card1.setVisibility(View.INVISIBLE);
         dealerCard1.setVisibility(View.INVISIBLE);
+
+       /* imageViewHider = (ImageView) findViewById(R.id.imageViewDealerCard2);
+        imageViewHider.setVisibility(View.INVISIBLE);*/
 
         frameLayoutDeck = (FrameLayout) findViewById(R.id.frameLayoutDeck);
         gameplayLayout = (RelativeLayout) findViewById(R.id.gameplay_layout);
@@ -269,9 +280,14 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         }
 
         anim.setDuration(500);
-        anim.setFillAfter(true);
+        if (afterBlackjack == true) {
+            anim.setFillAfter(false);
+        } else {
+            anim.setFillAfter(true);
+        }
         source.startAnimation(anim);
     }
+
 
     private Runnable runnable;
     private int countToStopGivingEachPlayer2Cards = 0;
@@ -300,7 +316,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                 if (j > listCardPlaces.size() - 1) {
                     j = 0;
                 }
-                imageViewCard.postDelayed(this, 1000);
+                imageViewCard.postDelayed(this, 500);
                 countToStopGivingEachPlayer2Cards++;
                 if (countToStopGivingEachPlayer2Cards == 14) {  //this is pretty dumb way to stop, just count to 6*2 = 14 cards then stop... T_T
                     imageViewCard.removeCallbacks(runnable);
@@ -338,7 +354,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                 hasAce = checkHasAce(player);
                 for (int i = 0; i < 2; i++) {
 
-                    if (player.getCardsOnHand().get(i).getValue() > 10) { //has J/Q/K
+                    if (player.getCardsOnHand().get(i).getValue() >= 10) { //has 10/J/Q/K => 10
                         player.getCardsOnHand().get(i).setValue(10);
                     }
                     score += player.getCardsOnHand().get(i).getValue();
@@ -404,7 +420,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             boolean hasAce = false;
             hasAce = checkHasAce(dealer);
             for (int i = 0; i < 2; i++) {
-                if (dealer.getCardsOnHand().get(i).getValue() > 10) { //has J/Q/K
+                if (dealer.getCardsOnHand().get(i).getValue() >= 10) { //has 10/J/Q/K
                     dealer.getCardsOnHand().get(i).setValue(10);
                 }
                 score += dealer.getCardsOnHand().get(i).getValue();
@@ -431,125 +447,153 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
 
 
         //playAfterCheckBlackjack();
+        afterBlackjack = true;
 
     }
 
+    private void playAfterCheckBlackjack() {    ///((((******** this method is pure magic *_* ///////////////
+       /* playersAfterBlackjack.get(0).setTempScore1(-20);
+        playersAfterBlackjack.get(0).setFinalScore(-20);
+        playersAfterBlackjack.get(0).setTempScore2(-20);
+        playersAfterBlackjack.get(0).setScore(-20 + "");
+        playersAfterBlackjack.get(1).setTempScore1(-20);
+        playersAfterBlackjack.get(1).setFinalScore(-20);
+        playersAfterBlackjack.get(1).setTempScore2(-20);
+        playersAfterBlackjack.get(1).setScore(-20 + "");*/
 
-    private void playAfterCheckBlackjackNew() {
-        playersAfterBlackjack.get(0).setTempScore1(-10);
-        playersAfterBlackjack.get(0).setFinalScore(-10);
-        playersAfterBlackjack.get(0).setTempScore2(-10);
-        playersAfterBlackjack.get(0).setScore(1 + "");
-        for (int i = 0; i < playersAfterBlackjack.size(); i++) { //this loop is pure magic T_T
-            final int finalI = i;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //progressBarWaitBots.setVisibility(View.VISIBLE);
-                    textViewWaiting.setText(playersAfterBlackjack.get(finalI).getName());
-                    //textViewWaiting.setVisibility(View.VISIBLE);
-                    //imageViewWaiting.setVisibility(View.VISIBLE);
-                    giveCardByCommand(finalI);      //each move here is 1s
-                }
-            }, 5000 * i);           //give each bot 5s to think
-
-        }
-    }
-
-    private String gameHistory = "";
-
-    private void giveCardByCommand(final int chair) {
 
         runnable = new Runnable() {
+            int countChair = 0;
 
             @Override
             public void run() {
-                Player player = playersAfterBlackjack.get(chair);
-                /*if (player.getName().equals("Dealer")) {
-                    Log.e("DEALER", "DEALER " + player.getFinalScore());
-                }*/
-                if (player.getTempScore1() < 10) {          //first check if score <10 then take more card
+                progressBarWaitBots.setVisibility(View.VISIBLE);
+                imageViewWaiting.setVisibility(View.VISIBLE);
+                textViewWaiting.setVisibility(View.VISIBLE);
+                textViewCommand.setVisibility(View.VISIBLE);
 
-                    do {
-                        imageViewCard.setImageResource(R.drawable.card_backside);     //expose card after moving
-                        moveCard(imageViewCard, listCardPlaces.get(chair));
+                textViewWaiting.setText(playersAfterBlackjack.get(countChair).getName());
+
+                giveCards(countChair);
+                imageViewCardDealingAfterBJ.postDelayed(this, 4500);
+                countChair++;
+                //imageViewCard.postDelayed(this, 5000);
+                /*textViewCommand.setText("Hmmm");
+                imageViewWaiting.setImageResource(R.drawable.thinking);*/
+                if (countChair == playersAfterBlackjack.size()) {       //players except Dealer get cards
+
+                    imageViewCardDealingAfterBJ.removeCallbacks(runnable);
+                    imageViewCardDealingAfterBJ.removeCallbacks(runnableGivecard);
+                    progressBarWaitBots.setVisibility(View.INVISIBLE);
+                    textViewWaiting.setVisibility(View.INVISIBLE);
+                    textViewCommand.setVisibility(View.INVISIBLE);
+                    imageViewWaiting.setVisibility(View.INVISIBLE);
+
+                    Log.e("History:", gameHistory);
+                }
+
+            }
+        };
+        runOnUiThread(runnable);
+    }
+
+    private Runnable runnableGivecard;
+
+    private String gameHistory = "";
+
+    private void giveCards(final int countChair) {
+        final Player player = playersAfterBlackjack.get(countChair);
+
+        runnableGivecard = new Runnable() {
+            @Override
+            public void run() {
+                boolean stop = false;
+                if (!player.getName().equals("Dealer")) {
+                    if (player.getTempScore1() < 10) {
+                        imageViewWaiting.setImageResource(R.drawable.hit);
+                        textViewCommand.setText("Hit");
+                        imageViewCardDealingAfterBJ.setImageResource(R.drawable.card_backside);     //expose card after moving
+                        moveCard(imageViewCardDealingAfterBJ, listCardPlaces.get(countChair));
                         int selectedNumber = random.nextInt(deck.size());
-                        //addCardToHand(place, deck.get(selectedNumber));
                         player.addCardToHand(deck.get(selectedNumber));
+                        addNewCardByCommand(player, deck.get(selectedNumber));
                         gameHistory += player.getName() + " current score:" + player.getFinalScore() + " take card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit() + "\n";
                         Log.e("Took Card", player.getName() + " with score " + player.getFinalScore() + " took card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit());
-                        Log.e("score", player.getName() + " : Score= " + player.getFinalScore());
                         checkFinalScore(player, deck.get(selectedNumber));
+                        Log.e("score", player.getName() + " : Score= " + player.getFinalScore());
                         deck.remove(selectedNumber); //remove dealt card from deck
                         updateScore(player);
-                        progressBarWaitBots.setVisibility(View.VISIBLE);
-                        textViewWaiting.setVisibility(View.VISIBLE);
-                        imageViewWaiting.setVisibility(View.VISIBLE);
-                        imageViewCard.postDelayed(this, 5000);
-                        if (player.getFinalScore() > 30)
-                            imageViewCard.removeCallbacks(runnable);
+                        if (player.getFinalScore() > 21) {
+                            stop = true;
+                        }
 
-                    } while (player.getFinalScore() < 10);
-                    //imageViewCard.removeCallbacks(runnable);
-                } else if (player.getFinalScore() >= 10 && player.getFinalScore() <= 16) {          //then check if score >16 stop taking card
-                    do {
+                    } else if (player.getTempScore1() >= 10 && player.getFinalScore() <= 16) {
                         Log.e("50-50", "50-50");
-                        progressBarWaitBots.setVisibility(View.VISIBLE);
-                        textViewWaiting.setVisibility(View.VISIBLE);
-                        imageViewWaiting.setVisibility(View.VISIBLE);
                         int chanceToTakeMoreCard = random.nextInt(2);
                         int selectedNumber = random.nextInt(deck.size());
-                        if (chanceToTakeMoreCard == 0) {
+                        if (chanceToTakeMoreCard != 0 && chanceToTakeMoreCard != 1) {
                             Log.e("Bad luck", player.getName() + " BadLUCK");
                             gameHistory += player.getName() + " thinks he is out of luck so he STAND with score:" + player.getFinalScore() + "\n";
-                        } else {
-                            Log.e("Chance Take more", chanceToTakeMoreCard + "");
-                            moveCard(imageViewCard, listCardPlaces.get(chair));
+                            ////*****Special case
+                            // when player has 2 first cards that contain A then play decides to STAND => pass method checkFinalScore(...); => no finalScore update
+                            // just check for this case and update finalScore
+                            if (checkHasAce(player)/* && player.getTempScore1() == 11) || (checkHasAce(player) && player.getTempScore1() == 10)*/) {
+                                Log.e("GOTTEEM", "DEEZNUTZ");
+                                player.setFinalScore(player.getTempScore1());
+                            }
+                            stop = true;
+                            imageViewWaiting.setImageResource(R.drawable.stand);
+                            textViewCommand.setText("Stand");
+                        /*if (player.getFinalScore() >= 10 && player.getFinalScore() <= 21) {
+                            imageViewWaiting.setImageResource(R.drawable.stand);
+                            textViewCommand.setText("Stand");
+                        }*/
+                        } else if (chanceToTakeMoreCard == 0 || chanceToTakeMoreCard == 1) {    //need to fix
 
+                            Log.e("Chance Take more", chanceToTakeMoreCard + "");
+                            imageViewCardDealingAfterBJ.setImageResource(R.drawable.card_backside);     //expose card after moving
+                            moveCard(imageViewCardDealingAfterBJ, listCardPlaces.get(countChair));
                             player.addCardToHand(deck.get(selectedNumber));
+                            addNewCardByCommand(player, deck.get(selectedNumber));
                             Log.e("Took Card", player.getName() + " with score " + player.getFinalScore() + " took card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit());
                             gameHistory += player.getName() + " current score:" + player.getFinalScore() + " take card:" + deck.get(selectedNumber).getValue() + deck.get(selectedNumber).getSuit() + "\n";
                             checkFinalScore(player, deck.get(selectedNumber));
                             deck.remove(selectedNumber); //remove dealt card from deck
+                            imageViewWaiting.setImageResource(R.drawable.hit);
+                            textViewCommand.setText("Hit Again");
                         }
                         updateScore(player);
-                        imageViewCard.postDelayed(this, 5000);
-                        if (player.getFinalScore() > 30) {
-                            imageViewCard.removeCallbacks(runnable);
-                        }
-                    } while (player.getFinalScore() >= 10 && player.getFinalScore() <= 16);
 
+                    } else if (player.getFinalScore() > 16) {          //then check if score >16 stop taking card
 
-                } else if (player.getFinalScore() > 16) {          //then check if score >16 stop taking card
-                    Log.e("STAND", player.getName() + " STAND WITH " + ": Score= " + player.getFinalScore());
-                    gameHistory += player.getName() + " thinks he is out of luck so he STAND with score:" + player.getFinalScore() + "\n";
-                    progressBarWaitBots.setVisibility(View.VISIBLE);
-                    textViewWaiting.setVisibility(View.VISIBLE);
-                    imageViewWaiting.setVisibility(View.VISIBLE);
-                    updateScore(player);
-                    imageViewCard.postDelayed(this, 5000);
-                    imageViewCard.removeCallbacks(runnable);
+                        imageViewWaiting.setImageResource(R.drawable.stand);
+                        textViewCommand.setText("Stand");
+                        Log.e("STAND", player.getName() + " STAND WITH " + ": Score= " + player.getFinalScore());
+                        gameHistory += player.getName() + " thinks he is out of luck so he STAND with score:" + player.getFinalScore() + "\n";
+                        updateScore(player);
+
+                        stop = true;
+                    }
+
+                    imageViewCardDealingAfterBJ.postDelayed(this, 750);
+                    if (player.getFinalScore() > 21) {
+                        imageViewWaiting.setImageResource(R.drawable.rage1);
+                        textViewCommand.setText("Bust");
+                    } else if (player.getFinalScore() == 21) {
+                        imageViewWaiting.setImageResource(R.drawable.lol);
+                    }
+                    if (stop == true) {
+                        imageViewCardDealingAfterBJ.removeCallbacks(runnableGivecard);
+                    }
 
                 }
-                //Log.e("  chair:", chair + "  Players size:" + playersAfterBlackjack.size());
-                if (chair == playersAfterBlackjack.size() - 1) {
-                    progressBarWaitBots.setVisibility(View.INVISIBLE);
-                    textViewWaiting.setVisibility(View.INVISIBLE);
-                    imageViewWaiting.setVisibility(View.INVISIBLE);
-                    imageViewCard.removeCallbacks(runnable);
-                    Log.e("History: ", gameHistory);
-                }
-                if (player.getName().equals("Dealer") && player.getScore().equals("Blackjack")) {
-                    progressBarWaitBots.setVisibility(View.INVISIBLE);
-                    textViewWaiting.setVisibility(View.INVISIBLE);
-                    imageViewWaiting.setVisibility(View.INVISIBLE);
-                    imageViewCard.removeCallbacks(runnable);
-                }
+
             }
         };
 
-        runOnUiThread(runnable);
+        runOnUiThread(runnableGivecard);
     }
+
 
     private void updateScore(Player player) {
         switch (player.getChair()) {
@@ -618,23 +662,35 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     private void checkFinalScore(Player player, Card card) {
 
         if (player.isHasAce()) {
-            if (card.getValue() > 10) {         //J/Q/K => 10
+            if (card.getValue() >= 10) {         //J/Q/K => 10
                 card.setValue(10);
             }
             int score1 = card.getValue() + player.getTempScore1();
             int score2 = card.getValue() + player.getTempScore2();
             if (score2 > 21) {
                 player.setFinalScore(score1);
+                player.setTempScore1(score1);   //new
             } else {
                 player.setFinalScore(score2);
+                player.setTempScore1(score2);   //new
             }
         } else {
-            if (card.getValue() > 10) {         //J/Q/K => 10
-                card.setValue(10);
+            if (card.getValue() == 1) {
+                int tempScore = player.getCurrentScore();
+                player.setFinalScore(tempScore);
+                player.setTempScore1(tempScore);
+                Log.e("GOOTEEEM", "DEEEZNUZ");
+            } else {
+                if (card.getValue() >= 10) {         //J/Q/K => 10
+                    card.setValue(10);
+                }
+                /*int score = player.getFinalScore();*/  //
+                int score = player.getCurrentScore();
+                /*score += card.getValue();*/
+                player.setFinalScore(score);
+                player.setTempScore1(score);    //new
             }
-            int score = player.getFinalScore();
-            score += card.getValue();
-            player.setFinalScore(score);
+
         }
     }
 
@@ -651,41 +707,106 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
 
     private ImageView imageViewNewCardAfterBJ;
 
+
     private void addNewCardByCommand(final Player player, final Card card) {
         imageViewNewCardAfterBJ = new ImageView(this);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(imageViewCard.getWidth(), imageViewCard.getHeight());
-        params.leftMargin = player1Card1.getWidth() / 2;
+        if (player.getCardsOnHand().size() == 3)
+            params.leftMargin = player1Card1.getWidth() / 2;
+        else if (player.getCardsOnHand().size() == 4)
+            params.leftMargin = player1Card1.getWidth() * 3 / 4;
+        else if (player.getCardsOnHand().size() == 5)
+            params.leftMargin = player1Card1.getWidth();
+        else if (player.getCardsOnHand().size() == 6)
+            params.leftMargin = player1Card1.getWidth() * 5 / 4;
+        else if (player.getCardsOnHand().size() == 7)
+            params.leftMargin = player1Card1.getWidth() * 3 / 2;
+        else if (player.getCardsOnHand().size() == 8)
+            params.leftMargin = player1Card1.getWidth() * 7 / 4;
+        else if (player.getCardsOnHand().size() == 9)
+            params.leftMargin = player1Card1.getWidth() * 2;
+
         imageViewNewCardAfterBJ.setLayoutParams(params);
         imageViewNewCardAfterBJ.setImageResource(cardImage[card.getImage_index()]);
         switch (player.getChair()) {
             case 0:
-                player.addCardToHand(card);
-                player1Hand.addView(imageViewNewCardAfterBJ);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (imageViewNewCardAfterBJ.getParent() != null) {
+                            Log.e("Parent:", imageViewNewCardAfterBJ.getParent().toString());
+                            Log.e("Children", player1Hand.toString());
+                            ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCardAfterBJ);
+                        }
+                        player1Hand.addView(imageViewNewCardAfterBJ);
+                    }
+                }, 500);
+               /* player1Hand.addView(imageViewNewCardAfterBJ);*/
                 break;
             case 1:
-                player.addCardToHand(card);
                 Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
-                player2Hand.addView(imageViewNewCardAfterBJ);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (imageViewNewCardAfterBJ.getParent() != null) {
+                            Log.e("Parent:", imageViewNewCardAfterBJ.getParent().toString());
+                            Log.e("Children", player1Hand.toString());
+                            ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCardAfterBJ);
+                        }
+                        player2Hand.addView(imageViewNewCardAfterBJ);
+                    }
+                }, 500);
                 break;
             case 2:
-                player.addCardToHand(card);
                 Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
-                player3Hand.addView(imageViewNewCardAfterBJ);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (imageViewNewCardAfterBJ.getParent() != null) {
+                            Log.e("Parent:", imageViewNewCardAfterBJ.getParent().toString());
+                            Log.e("Children", player1Hand.toString());
+                            ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCardAfterBJ);
+                        }
+                        player3Hand.addView(imageViewNewCardAfterBJ);
+                    }
+                }, 500);
+                ;
                 break;
             case 3:
-                player.addCardToHand(card);
                 Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
-                player4Hand.addView(imageViewNewCardAfterBJ);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (imageViewNewCardAfterBJ.getParent() != null) {
+                            Log.e("Parent:", imageViewNewCardAfterBJ.getParent().toString());
+                            Log.e("Children", player1Hand.toString());
+                            ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCardAfterBJ);
+                        }
+                        player4Hand.addView(imageViewNewCardAfterBJ);
+                    }
+                }, 500);
                 break;
             case 4:
-                player.addCardToHand(card);
                 Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
-                player5Hand.addView(imageViewNewCardAfterBJ);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (imageViewNewCardAfterBJ.getParent() != null) {
+                            Log.e("Parent:", imageViewNewCardAfterBJ.getParent().toString());
+                            Log.e("Children", player1Hand.toString());
+                            ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCardAfterBJ);
+                        }
+                        player5Hand.addView(imageViewNewCardAfterBJ);
+                    }
+                }, 500);
                 break;
             case 5:
-                player.addCardToHand(card);
                 Log.e("Player take New Card:", player.getName() + " - " + card.getValue() + card.getSuit());
-                player6Hand.addView(imageViewNewCardAfterBJ);
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (imageViewNewCardAfterBJ.getParent() != null) {
+                            Log.e("Parent:", imageViewNewCardAfterBJ.getParent().toString());
+                            Log.e("Children", player1Hand.toString());
+                            ((ViewGroup) imageViewCard.getParent()).removeView(imageViewNewCardAfterBJ);
+                        }
+                        player6Hand.addView(imageViewNewCardAfterBJ);
+                    }
+                }, 500);
                 break;
             default:
                 break;
@@ -738,6 +859,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
 
     private ImageView imageViewNewCard;      //use to show animation "addCardToHand"
     private Handler handler = new Handler(); //use to delay "addCardToHand" time
+    private int idToReveal2ndCardOfDealer;
 
     private void addCardToHand(int placeNumber, Card card) {
         imageViewNewCard = new ImageView(this);
@@ -804,13 +926,18 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                 //player6Hand.addView(imageViewNewCard);
                 break;
             case 6:
-                if (dealerHand.getChildCount() == 1) { //when there is no card yet in player's hand but only dummy imageview(playerCard1), view doesn't have to has margin so set margin back to 0
+                if (dealerHand.getChildCount() == 1) { /*// it's 2 but not 1 like for players
+                    // because dealer has 2 dummies cards inside, the 2nd one is for hiding 2nd card*/
                     params.leftMargin = 0;
                     imageViewNewCard.setLayoutParams(params);
                 }
                 if (countToStopGivingEachPlayer2Cards == 13) {
                     //imageViewNewCard.setImageResource(R.drawable.card_backside);
+                    //idToReveal2ndCardOfDealer = imageViewNewCard.getId();
                     imageViewNewCard.setVisibility(View.INVISIBLE);
+                    Log.e("Hiding Card", "Hiding card");
+                    //imageViewHider.setVisibility(View.VISIBLE);
+
                 }
                 doDelayAddCard(dealerHand);
                 dealer.addCardToHand(card);
@@ -833,7 +960,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
                 }
                 playerHand.addView(imageViewNewCard);
             }
-        }, 1000);
+        }, 500);
     }
 
 
@@ -925,17 +1052,19 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         if (view.getId() == R.id.buttonHit) {
             Toast.makeText(this, "Hit", Toast.LENGTH_SHORT).show();
             //giveCardByCommand(0);
-            playAfterCheckBlackjackNew();
+            //playAfterCheckBlackjackNew();
+            playAfterCheckBlackjack();
         }
         if (view.getId() == R.id.buttonStand) {
             Toast.makeText(this, "Stand", Toast.LENGTH_SHORT).show();
         }
         if (view.getId() == R.id.buttonMove) {
             handler.removeCallbacksAndMessages(null);
-            Log.e("child:", dealerHand.toString());
+            Log.e("child 0:", dealerHand.getChildAt(0).toString() + " child 1" + dealerHand.getChildAt(1).toString());
             if (dealerHand.getChildAt(2) != null)
                 dealerHand.getChildAt(2).setVisibility(View.VISIBLE); // set 3rd item in dealerHand (1st one is dummy) => set 2nd card in dealer hand to visible
             imageViewCard.clearAnimation();     // covered card actually is just fillAfter of animation => clear it to show card
+
             if (dealer.getScore() != null)
                 scoreDealer.setText(dealer.getScore());
         }
