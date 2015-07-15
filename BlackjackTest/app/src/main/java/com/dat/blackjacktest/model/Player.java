@@ -1,7 +1,6 @@
 package com.dat.blackjacktest.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -13,13 +12,14 @@ public class Player {
     Chip bet;
     List<Card> cardsOnHand = new ArrayList<>();
     String score; //score is String to store not only number but also "blackjack" and "tempScore1 | tempScore2"
-    String status;
+    boolean isPlayer = false;
     int chair;
 
-    int tempScore;
+    String winStatus = "";
     int tempScore1; //always <10
     int tempScore2; //always >11
     int finalScore;
+
 
     boolean hasAce = false;
 
@@ -115,20 +115,13 @@ public class Player {
         this.hasAce = hasAce;
     }
 
-    public String getStatus() {
-        return status;
+
+    public boolean isPlayer() {
+        return isPlayer;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getTempScore() {
-        return tempScore;
-    }
-
-    public void setTempScore(int tempScore) {
-        this.tempScore = tempScore;
+    public void setIsPlayer(boolean isPlayer) {
+        this.isPlayer = isPlayer;
     }
 
     public int getCurrentScore() {
@@ -143,4 +136,13 @@ public class Player {
         }
         return currentScore;
     }
+
+    public String getWinStatus() {
+        return winStatus;
+    }
+
+    public void setWinStatus(String winStatus) {
+        this.winStatus = winStatus;
+    }
+
 }

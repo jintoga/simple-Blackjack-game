@@ -12,8 +12,10 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayoutPlayer"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:id="@+id/linearLayout2">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -42,8 +44,8 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:id="@+id/imageViewWaiting"
                 android:src="@drawable/thinking"
                 android:layout_gravity="center" />
@@ -124,6 +126,14 @@
                 android:layout_marginLeft="10dp" />-->
         </FrameLayout>
 
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/textViewPrizeDealer" />
+
     </LinearLayout>
 
 
@@ -143,6 +153,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer1">
 
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Large Text"
+                android:id="@+id/textViewPrizePlayer1" />
 
             <FrameLayout
                 android:id="@+id/frameLayout_Player1Hand"
@@ -219,6 +237,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer2">
 
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Large Text"
+                android:id="@+id/textViewPrizePlayer2" />
 
             <FrameLayout
 
@@ -298,6 +324,14 @@
             android:id="@+id/linearLayoutPlayer3">
 
 
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Large Text"
+                android:id="@+id/textViewPrizePlayer3" />
+
             <FrameLayout
 
                 android:id="@+id/frameLayout_Player3Hand"
@@ -375,6 +409,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer4">
 
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Large Text"
+                android:id="@+id/textViewPrizePlayer4" />
 
             <FrameLayout
 
@@ -457,6 +499,14 @@
             android:id="@+id/linearLayoutPlayer5">
 
 
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Large Text"
+                android:id="@+id/textViewPrizePlayer5" />
+
             <FrameLayout
 
                 android:id="@+id/frameLayout_Player5Hand"
@@ -537,6 +587,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutPlayer6">
 
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Large Text"
+                android:id="@+id/textViewPrizePlayer6" />
 
             <FrameLayout
 
@@ -643,21 +701,25 @@
             android:src="@drawable/card_backside"
             android:layout_gravity="center_horizontal|top" />
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageViewCardDelayerDealer"
+            android:src="@drawable/card_backside"
+            android:layout_gravity="center_horizontal|top" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageViewDelayerPlayer"
+            android:src="@drawable/card_backside"
+            android:layout_gravity="center_horizontal|top" />
+
     </FrameLayout>
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/buttonMove"
-        android:layout_marginRight="26dp"
-        android:layout_marginEnd="26dp"
-        android:layout_alignTop="@+id/frameLayoutDeck"
-        android:layout_toLeftOf="@+id/frameLayoutDeck"
-        android:layout_toStartOf="@+id/frameLayoutDeck" />
-
     <LinearLayout
+        android:layout_marginLeft="10dp"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -694,6 +756,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_margin="10dp"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -724,5 +787,28 @@
             android:text="Stand"
             android:id="@+id/buttonStand" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Medium Text"
+        android:id="@+id/textViewAccount"
+        android:layout_marginLeft="55dp"
+        android:layout_marginStart="55dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/linearLayout2"
+        android:layout_toEndOf="@+id/linearLayout2"
+        android:layout_marginTop="6dp" />
+
+    <Button
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play Again"
+        android:id="@+id/buttonPlayAgain"
+        android:layout_alignTop="@+id/linearLayout2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

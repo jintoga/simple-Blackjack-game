@@ -13,11 +13,11 @@
     </string-array>
 
     <string-array name="players">
-        <item>Player 1</item>
-        <item>Player 2</item>
-        <item>Player 3</item>
-        <item>Player 4</item>
-        <item>Player 5</item>
-        <item>Player 6</item>
+        <item>Number 1</item>
+        <item>Number 2</item>
+        <item>Number 3</item>
+        <item>Number 4</item>
+        <item>Number 5</item>
+        <item>Number 6</item>
     </string-array>
 </resources>

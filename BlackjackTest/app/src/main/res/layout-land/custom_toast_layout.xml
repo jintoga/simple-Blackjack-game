@@ -14,7 +14,7 @@
         android:layout_gravity="center_vertical" />
 
     <ProgressBar
-        style="@android:style/Widget.Holo.Light.ProgressBar.Large.Inverse"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Inverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
