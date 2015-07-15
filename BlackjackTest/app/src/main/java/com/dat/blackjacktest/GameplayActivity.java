@@ -106,6 +106,9 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //dialogInterface.dismiss();
+                Intent intent = getIntent();
+                intent.putExtra(MainActivity.tag_money, money);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -594,6 +597,8 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         player.setTempScore1(-10);
 
 */
+        buttonHit.setEnabled(false);
+        buttonStand.setEnabled(false);
         runnableDealer = new Runnable() {
 
             @Override
@@ -775,6 +780,8 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
     }
 
     private void dealerTurnToPlay() {
+        buttonHit.setEnabled(false);
+        buttonStand.setEnabled(false);
         Handler delayer = new Handler();
         delayer.postDelayed(new Runnable() {
             @Override
@@ -1444,7 +1451,7 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
         if (view.getId() == R.id.buttonPlayAgain) {
             Intent intent = getIntent();
             intent.putExtra(MainActivity.tag_money, money);
-            setResult(MainActivity.tag_return_money, intent);
+            setResult(RESULT_OK, intent);
             finish();
             startActivity(intent);
         }
@@ -1590,5 +1597,37 @@ public class GameplayActivity extends Activity implements View.OnClickListener {
 
     }
 
+ /*   @Override
+    public void onBackPressed() {
+
+        Intent intent = getIntent();
+        intent.putExtra(MainActivity.tag_money, money);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }*/
+
+
+    /*@Override
+    protected void onPause() {
+
+        super.onPause();
+        Intent intent = getIntent();
+        intent.putExtra(MainActivity.tag_money, money);
+        setResult(RESULT_OK, intent);
+    }*/
+
+    @Override
+    public void finish() {
+        Intent intent = getIntent();
+        intent.putExtra(MainActivity.tag_money, money);
+        setResult(RESULT_OK, intent);
+        super.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
 
 }

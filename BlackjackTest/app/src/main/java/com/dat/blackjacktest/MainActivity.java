@@ -22,6 +22,7 @@ import org.w3c.dom.Text;
 public class MainActivity extends Activity implements View.OnClickListener {
     public static final String tag_play_position = "play_position";
     public static final String tag_money = "money";
+    public static final String tag_money_back = "money_back";
     Button buttonNewGame, buttonExit;
     Spinner spinnerPosition;
     int playPosition;
@@ -45,7 +46,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         buttonNewGame = (Button) findViewById(R.id.buttonNewGame);
         buttonExit = (Button) findViewById(R.id.buttonExit);
         textViewAccountInMain = (TextView) findViewById(R.id.textViewAcountInMain);
-        textViewAccountInMain.setText(money + "$");
+        if (textViewAccountInMain != null)
+            textViewAccountInMain.setText(money + "$");
     }
 
     private void setEvents() {
@@ -67,7 +69,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == tag_return_money) {
+        if (resultCode == RESULT_OK) {
             money = data.getIntExtra(tag_money, 0);
             textViewAccountInMain.setText(money + "$");
         }
